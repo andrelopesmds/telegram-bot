@@ -8,8 +8,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "deploy": "tsc && cdk deploy",
-    "destroy": "cdk destroy"
+    "deploy": "cdk deploy",
+    "destroy": "cdk destroy",
+    "synth": "cdk synth"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.119.0",
@@ -19,6 +20,7 @@
     "@aws-cdk/aws-sns-subscriptions": "^1.120.0",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
+    "@types/superagent": "^4.1.12",
     "aws-cdk": "1.119.0",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
@@ -27,6 +29,8 @@
   },
   "dependencies": {
     "@aws-cdk/core": "1.119.0",
-    "source-map-support": "^0.5.16"
+    "monocdk": "^1.120.0",
+    "source-map-support": "^0.5.16",
+    "superagent": "^6.1.0"
   }
 }
