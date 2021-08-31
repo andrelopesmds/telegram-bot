@@ -59,6 +59,14 @@
     "@aws-cdk/core" "1.120.0"
     constructs "^3.3.69"
 
+"@aws-cdk/aws-codestarnotifications@1.120.0":
+  version "1.120.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-codestarnotifications/-/aws-codestarnotifications-1.120.0.tgz#7732a5232041e7be18e15e2e18f2aa1370d04737"
+  integrity sha512-dqbl0vIe2muXzhhoy6lCYKyPl4KNx+N5BQ5avLWj+Rd4NysEKUaAQEGsEX243R9uo0ZJyA4Jo2RYXN+m2b5G2Q==
+  dependencies:
+    "@aws-cdk/core" "1.120.0"
+    constructs "^3.3.69"
+
 "@aws-cdk/aws-ec2@1.120.0":
   version "1.120.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-ec2/-/aws-ec2-1.120.0.tgz#a8898561556eca5e739740fde8f053560f07eea6"
@@ -218,6 +226,33 @@
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-signer/-/aws-signer-1.120.0.tgz#e610a42f92ac6c787bb018fddf1a27e9358c2c03"
   integrity sha512-kRq5tHbnF8QiyjFWHo2QVCeAX/WyWTldp14piqOh6/UdzXYC8mRSFPw/R9+p7fkdAeVVcaQcSXFCkI7i8dQYlg==
   dependencies:
+    "@aws-cdk/core" "1.120.0"
+    constructs "^3.3.69"
+
+"@aws-cdk/aws-sns-subscriptions@^1.120.0":
+  version "1.120.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-sns-subscriptions/-/aws-sns-subscriptions-1.120.0.tgz#be1a0102dece172bd12ff316745e7a9fdd353577"
+  integrity sha512-UOxtTyU72Pw8KThxpw3YqDzEgh2vHn3JMF9tqVWzAvhJuKOpcVGZqxJdPme5I5pUYEtLAPS0qTTbzsv9FDByJg==
+  dependencies:
+    "@aws-cdk/aws-iam" "1.120.0"
+    "@aws-cdk/aws-kms" "1.120.0"
+    "@aws-cdk/aws-lambda" "1.120.0"
+    "@aws-cdk/aws-sns" "1.120.0"
+    "@aws-cdk/aws-sqs" "1.120.0"
+    "@aws-cdk/core" "1.120.0"
+    constructs "^3.3.69"
+
+"@aws-cdk/aws-sns@1.120.0", "@aws-cdk/aws-sns@^1.120.0":
+  version "1.120.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-sns/-/aws-sns-1.120.0.tgz#4f7c28c23503786c5da778b8be6a197f965ecad5"
+  integrity sha512-kLW+BwdbFc0wlF19R3ngyEE5L+C73ghDOYCk3S4/6WvWvhuY6KnTjSyaEJ4TikkrXHwWLGbYGo19bQDtRQj1mw==
+  dependencies:
+    "@aws-cdk/aws-cloudwatch" "1.120.0"
+    "@aws-cdk/aws-codestarnotifications" "1.120.0"
+    "@aws-cdk/aws-events" "1.120.0"
+    "@aws-cdk/aws-iam" "1.120.0"
+    "@aws-cdk/aws-kms" "1.120.0"
+    "@aws-cdk/aws-sqs" "1.120.0"
     "@aws-cdk/core" "1.120.0"
     constructs "^3.3.69"
 
