@@ -15,7 +15,7 @@ exports.handler = async (event: any) => {
     const { body } = await superagent.get('https://www.mercadobitcoin.net/api/' + ticker.key + '/ticker/')
     console.log(body);
 
-    const price = body.ticker.last; // format this
+    const price = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(body.ticker.last);
     message = message + ticker.value + ": " + JSON.stringify(price) + "\n"
   }
   
