@@ -1,4 +1,4 @@
-import { Construct, Stack, StackProps} from 'monocdk'
+import { Construct, Stack, StackProps, Duration} from 'monocdk'
 import { NodejsFunction } from 'monocdk/aws-lambda-nodejs'
 import { Topic } from 'monocdk/aws-sns'
 import { LambdaSubscription } from 'monocdk/aws-sns-subscriptions'
@@ -14,7 +14,15 @@ export class TelegramBotStack extends Stack {
     const cryptoTracker = 'crypto-tracker'
     const cryptopTrackerFunction = new NodejsFunction(this, `${STACK_NAME}-${cryptoTracker}`, {
       functionName: `${STACK_NAME}-${cryptoTracker}`,
-      entry: path.join(__dirname, `../src/lambdas/${cryptoTracker}.ts`)
+      entry: path.join(__dirname, `../src/lambdas/${cryptoTracker}.ts`),
+      timeout: Duration.seconds(10)
+    });
+
+    const stocksTracker = 'stocks-tracker'
+    const stocksTrackerFunction = new NodejsFunction(this, `${STACK_NAME}-${stocksTracker}`, {
+      functionName: `${STACK_NAME}-${stocksTracker}`,
+      entry: path.join(__dirname, `../src/lambdas/${stocksTracker}.ts`),
+      timeout: Duration.seconds(10)
     });
 
     const messageSender = 'message-sender'
@@ -30,5 +38,6 @@ export class TelegramBotStack extends Stack {
 
     topic.addSubscription(new LambdaSubscription(messageSenderFunction))
     topic.grantPublish(cryptopTrackerFunction)
+    topic.grantPublish(stocksTrackerFunction)
   }
 }
