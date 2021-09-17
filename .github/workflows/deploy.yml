@@ -28,7 +28,7 @@ jobs:
         run: yarn
 
       - name: Deploy
-        run: npx cdk deploy
+        run: yarn deploy
         env:
           MARKET_STACK_ACCESS_KEY: ${{ secrets.MARKET_STACK_ACCESS_KEY }}
           BOT_CHAT_ID: ${{ secrets.BOT_CHAT_ID }}
