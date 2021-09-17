@@ -8,22 +8,21 @@ export const formatPrice = (value: number): string => {
 }
 
 export const getPrice = async (ticker: Ticker, type: TickerType): Promise<string> => {
-  let url = ''
+  let price = 0
   switch(type) {
     case TickerType.Stocks:
-      url = `http://api.marketstack.com/v1/tickers/${ticker.key}/eod/latest?access_key=${constants.MARKET_STACK_ACCESS_KEY}`
+      const res = await getRequest(`http://api.marketstack.com/v1/tickers/${ticker.key}/eod/latest?access_key=${constants.MARKET_STACK_ACCESS_KEY}`)
+      price = res.body.close
       break
     case TickerType.Crypto:
-      url = `https://www.mercadobitcoin.net/api/${ticker.key}/ticker/`
+      const res2 = await getRequest(`https://www.mercadobitcoin.net/api/${ticker.key}/ticker/`)
+      price = res2.body.ticker.last
       break
     default:
-      console.log(`Invalid type: ${type}`)
+      throw new Error(`Invalid type: ${type}`)
   }
 
-  const { body } = await getRequest(url)
-  console.log(body);
-
-  return formatPrice(body.close);
+  return formatPrice(price);
 }
 
 export const getRequest = async (url: string): Promise<any> => {

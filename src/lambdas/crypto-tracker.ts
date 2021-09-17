@@ -11,7 +11,7 @@ exports.handler = async (event: any) => {
 
   for (const ticker of constants.cryptoTickers) {
     const price = await getPrice(ticker, TickerType.Crypto)
-    message = message + ticker.name + ": " + price + "\n"
+    message = message + ticker.name + ': ' + price + '\n'
   }
   
   const res = await sns.publish({
