@@ -29,3 +29,7 @@ jobs:
 
       - name: Deploy
         run: npx cdk deploy
+        env:
+          MARKET_STACK_ACCESS_KEY: ${{ secrets.MARKET_STACK_ACCESS_KEY }}
+          BOT_CHAT_ID: ${{ secrets.BOT_CHAT_ID }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}

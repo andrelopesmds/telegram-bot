@@ -1,4 +1,4 @@
-import { constants } from './constants'
+import { constants } from '../constants'
 import superagent = require('superagent');
 
 exports.handler = async (event: any) => {

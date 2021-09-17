@@ -1,8 +1,8 @@
 export const constants = {
   topicArn: 'arn:aws:sns:us-east-1:125523035986:telegram-bot-topic', // TODO
-  accessKey: process.env.ACCESS_KEY,
-  BOT_TOKEN: '',
-  BOT_CHAT_ID: '',
+  MARKET_STACK_ACCESS_KEY: process.env.MARKET_STACK_ACCESS_KEY ?? '',
+  BOT_TOKEN: process.env.BOT_TOKEN ?? '',
+  BOT_CHAT_ID: process.env.BOT_CHAT_ID ?? '',
   cryptoTickers: [
     {
       key: 'BTC',
