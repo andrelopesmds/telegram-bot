@@ -28,4 +28,4 @@ jobs:
         run: yarn
 
       - name: Deploy
-        run: yarn deploy
+        run: npx cdk deploy
