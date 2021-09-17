@@ -1,9 +1,7 @@
 import { SNS } from 'aws-sdk';
-import { formatPrice } from '../lambdas/helper'
+import { getPrice } from '../lambdas/helper'
 import { constants } from './constants'
-import { Ticker } from './ticker.interface'
-
-import superagent = require('superagent');
+import { TickerType } from './ticker.interface'
 
 const sns = new SNS();
 
@@ -12,7 +10,7 @@ exports.handler = async (event: any) => {
   let message = ''
   
   for (const ticker of constants.stocksTickers) {
-    const price = await getPrice(ticker)
+    const price = await getPrice(ticker, TickerType.Stocks)
     message = message + ticker.name + ': ' + price + '\n'
   }
   
@@ -27,10 +25,3 @@ exports.handler = async (event: any) => {
     statusCode: 200, body: JSON.stringify(event)
   }
 };
-
-const getPrice = async (ticker: Ticker): Promise<string> => {
-  const { body } = await superagent.get(`http://api.marketstack.com/v1/tickers/${ticker.key}/eod/latest?access_key=${constants.accessKey}`)
-  console.log(body);
-
-  return formatPrice(body.close);
-}
