@@ -6,45 +6,45 @@ export const constants = {
   cryptoTickers: [
     {
       key: 'BTC',
-      value: 'Bitcoin'
+      name: 'Bitcoin'
     },
     {
       key: 'ETH',
-      value: 'Ethereum'
+      name: 'Ethereum'
     },
     {
       key: 'LTC',
-      value: 'Litecoin'
+      name: 'Litecoin'
     }
   ],
   stocksTickers: [
     {
       key: 'ABEV3.BVMF',
-      value: 'AMBEV'
+      name: 'AMBEV'
     },
     {
       key: 'BIDI11.BVMF',
-      value: 'Banco Inter'
+      name: 'Banco Inter'
     },
     {
       key: 'BBAS3.BVMF',
-      value: 'Banco do Brasil'
+      name: 'Banco do Brasil'
     },
     {
       key: 'BBSE3.BVMF',
-      value: 'BB Seguridade'
+      name: 'BB Seguridade'
     },
     {
       key: 'MGLU3.BVMF',
-      value: 'Magazine Luiza'
+      name: 'Magazine Luiza'
     },
     {
       key: 'MRVE3.BVMF',
-      value: 'MRV'
+      name: 'MRV'
     },
     {
       key: 'TAEE11.BVMF',
-      value: 'Taesa Unit'
+      name: 'Taesa Unit'
     }
   ]
 }

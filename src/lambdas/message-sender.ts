@@ -8,7 +8,7 @@ exports.handler = async (event: any) => {
 
   console.log(message)
 
-  await superagent.get('https://api.telegram.org/bot' + constants.BOT_TOKEN + '/sendMessage?chat_id=' + constants.BOT_CHAT_ID + '&parse_mode=Markdown&text=' + message)
+  //await superagent.get('https://api.telegram.org/bot' + constants.BOT_TOKEN + '/sendMessage?chat_id=' + constants.BOT_CHAT_ID + '&parse_mode=Markdown&text=' + message)
 
   return {
     statusCode: 200, body: JSON.stringify(event)
