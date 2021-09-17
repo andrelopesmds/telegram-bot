@@ -1,7 +1,7 @@
 import { SNS } from 'aws-sdk';
-import { getPrice } from '../lambdas/helper'
+import { getPrice } from '../helper'
 import { constants } from '../constants'
-import { TickerType } from './ticker.interface';
+import { TickerType } from '../ticker.interface';
 
 const sns = new SNS();
 

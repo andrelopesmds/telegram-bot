@@ -1,5 +1,5 @@
 import { TickerType, Ticker } from "./ticker.interface";
-import { constants } from '../constants'
+import { constants } from './constants'
 
 import superagent = require('superagent');
 
@@ -20,8 +20,12 @@ export const getPrice = async (ticker: Ticker, type: TickerType): Promise<string
       console.log(`Invalid type: ${type}`)
   }
 
-  const { body } = await superagent.get(url)
+  const { body } = await getRequest(url)
   console.log(body);
 
   return formatPrice(body.close);
+}
+
+export const getRequest = async (url: string): Promise<any> => {
+  return await superagent.get(url)
 }
