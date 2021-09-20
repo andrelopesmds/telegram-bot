@@ -2,6 +2,8 @@ import { Construct, Stack, StackProps, Duration} from 'monocdk'
 import { NodejsFunction } from 'monocdk/aws-lambda-nodejs'
 import { Topic } from 'monocdk/aws-sns'
 import { LambdaSubscription } from 'monocdk/aws-sns-subscriptions'
+import { Rule, Schedule } from 'monocdk/aws-events'
+import { LambdaFunction} from 'monocdk/aws-events-targets'
 import { constants } from '../src/constants'
 
 import * as path from 'path';
@@ -47,5 +49,12 @@ export class TelegramBotStack extends Stack {
     topic.addSubscription(new LambdaSubscription(messageSenderFunction))
     topic.grantPublish(cryptopTrackerFunction)
     topic.grantPublish(stocksTrackerFunction)
+
+    const rule = new Rule(this, 'Rule', {
+      schedule: Schedule.expression('cron(0 22 ? * MON-FRI *)')
+    });
+
+    rule.addTarget(new LambdaFunction(cryptopTrackerFunction))
+    rule.addTarget(new LambdaFunction(stocksTrackerFunction))
   }
 }
