@@ -14,11 +14,19 @@ export class TelegramBotStack extends Stack {
 
     const STACK_NAME = 'telegram-bot'
 
+    const topic = new Topic(this, `${STACK_NAME}-topic`, {
+      topicName: `${STACK_NAME}-topic`,
+      displayName: `${STACK_NAME}-topic`
+    });
+
     const cryptoTracker = 'crypto-tracker'
     const cryptopTrackerFunction = new NodejsFunction(this, `${STACK_NAME}-${cryptoTracker}`, {
       functionName: `${STACK_NAME}-${cryptoTracker}`,
       entry: path.join(__dirname, `../src/lambdas/${cryptoTracker}.ts`),
-      timeout: Duration.seconds(10)
+      timeout: Duration.seconds(10),
+      environment: {
+        TOPIC_ARN: topic.topicArn
+      }
     });
 
     const stocksTracker = 'stocks-tracker'
@@ -27,7 +35,8 @@ export class TelegramBotStack extends Stack {
       entry: path.join(__dirname, `../src/lambdas/${stocksTracker}.ts`),
       timeout: Duration.seconds(10),
       environment: {
-        MARKET_STACK_ACCESS_KEY: constants.MARKET_STACK_ACCESS_KEY
+        MARKET_STACK_ACCESS_KEY: constants.MARKET_STACK_ACCESS_KEY,
+        TOPIC_ARN: topic.topicArn
       }
     });
 
@@ -39,11 +48,6 @@ export class TelegramBotStack extends Stack {
         BOT_TOKEN: constants.BOT_TOKEN,
         BOT_CHAT_ID: constants.BOT_CHAT_ID,
       }
-    });
-
-    const topic = new Topic(this, `${STACK_NAME}-topic`, {
-      topicName: `${STACK_NAME}-topic`,
-      displayName: `${STACK_NAME}-topic`
     });
 
     topic.addSubscription(new LambdaSubscription(messageSenderFunction))
