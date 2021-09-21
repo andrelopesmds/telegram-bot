@@ -16,7 +16,7 @@ exports.handler = async (event: any) => {
   
   const res = await sns.publish({
     Message: message,
-    TopicArn: constants.topicArn,
+    TopicArn: constants.TOPIC_ARN,
   }).promise();
 
   console.log({...res, message });
