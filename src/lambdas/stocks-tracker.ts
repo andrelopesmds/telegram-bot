@@ -1,11 +1,11 @@
-import { SNS } from 'aws-sdk';
+import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import { getPrice } from '../helper'
 import { constants } from '../constants'
 import { TickerType } from '../ticker.interface'
 
-const sns = new SNS();
+const sns = new SNSClient({});
 
-exports.handler = async (event: any) => {
+export const handler = async (event: any) => {
   console.log(`Event: ${JSON.stringify(event)}`)
   let message = ''
   
@@ -14,10 +14,10 @@ exports.handler = async (event: any) => {
     message = message + ticker.name + ': ' + price + '\n'
   }
   
-  await sns.publish({
+  await sns.send(new PublishCommand({
     Message: message,
     TopicArn: constants.TOPIC_ARN,
-  }).promise();
+  }))
 
   console.log(`Message published ${message}`);
 };
