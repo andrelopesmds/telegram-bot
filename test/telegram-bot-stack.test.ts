@@ -1,4 +1,4 @@
-import { TelegramBotStack } from "../lib/telegram-bot-stack";
+import { TelegramBotStack } from "../cdk/telegram-bot-stack";
 import { App } from "monocdk";
 import { haveResourceLike, countResources, expect as expectCdk, countResourcesLike } from '@monocdk-experiment/assert'
 
