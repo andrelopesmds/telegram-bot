@@ -1,5 +1,5 @@
 import { TickerType, Ticker } from "./ticker.interface";
-import { constants } from './constants'
+import { MARKET_STACK_ACCESS_KEY } from './constants'
 
 import superagent = require('superagent');
 
@@ -11,7 +11,7 @@ export const getPrice = async (ticker: Ticker, type: TickerType): Promise<string
   let price = 0
   switch(type) {
     case TickerType.Stocks:
-      const res = await getRequest(`http://api.marketstack.com/v1/tickers/${ticker.key}/eod/latest?access_key=${constants.MARKET_STACK_ACCESS_KEY}`)
+      const res = await getRequest(`http://api.marketstack.com/v1/tickers/${ticker.key}/eod/latest?access_key=${MARKET_STACK_ACCESS_KEY}`)
       price = res.body.close
       break
     case TickerType.Crypto:

@@ -4,7 +4,7 @@ import { Topic } from 'monocdk/aws-sns'
 import { LambdaSubscription } from 'monocdk/aws-sns-subscriptions'
 import { Rule, Schedule } from 'monocdk/aws-events'
 import { LambdaFunction} from 'monocdk/aws-events-targets'
-import { constants } from '../src/constants'
+import { MARKET_STACK_ACCESS_KEY, BOT_CHAT_ID, BOT_TOKEN } from '../src/constants'
 
 import * as path from 'path';
 
@@ -35,7 +35,7 @@ export class TelegramBotStack extends Stack {
       entry: path.join(__dirname, `../src/lambdas/${stocksTracker}.ts`),
       timeout: Duration.seconds(10),
       environment: {
-        MARKET_STACK_ACCESS_KEY: constants.MARKET_STACK_ACCESS_KEY,
+        MARKET_STACK_ACCESS_KEY: MARKET_STACK_ACCESS_KEY,
         TOPIC_ARN: topic.topicArn
       }
     });
@@ -45,8 +45,8 @@ export class TelegramBotStack extends Stack {
       functionName: `${STACK_NAME}-${messageSender}`,
       entry: path.join(__dirname, `../src/lambdas/${messageSender}.ts`),
       environment: {
-        BOT_TOKEN: constants.BOT_TOKEN,
-        BOT_CHAT_ID: constants.BOT_CHAT_ID,
+        BOT_TOKEN: BOT_TOKEN,
+        BOT_CHAT_ID: BOT_CHAT_ID,
       }
     });
 
