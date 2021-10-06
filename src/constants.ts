@@ -1,9 +1,11 @@
+import { Ticker } from "./ticker.interface";
+
 export const TOPIC_ARN = process.env.TOPIC_ARN ?? '';
 export const MARKET_STACK_ACCESS_KEY = process.env.MARKET_STACK_ACCESS_KEY ?? ''
 export const BOT_TOKEN = process.env.BOT_TOKEN ?? ''
 export const BOT_CHAT_ID = process.env.BOT_CHAT_ID ?? ''
 
-export const cryptoTickers = [
+export const cryptoTickers: Ticker[] = [
   {
     key: 'BTC',
     name: 'Bitcoin'
@@ -17,7 +19,7 @@ export const cryptoTickers = [
     name: 'Litecoin'
   }
 ]
-export const stocksTickers = [
+export const stocksTickers: Ticker[] = [
   {
     key: 'ABEV3.BVMF',
     name: 'AMBEV'

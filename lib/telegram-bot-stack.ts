@@ -19,24 +19,14 @@ export class TelegramBotStack extends Stack {
       displayName: `${STACK_NAME}-topic`
     });
 
-    const cryptoTracker = 'crypto-tracker'
-    const cryptopTrackerFunction = new NodejsFunction(this, `${STACK_NAME}-${cryptoTracker}`, {
-      functionName: `${STACK_NAME}-${cryptoTracker}`,
-      entry: path.join(__dirname, `../src/lambdas/${cryptoTracker}.ts`),
+    const tickerTracker = 'ticker-tracker'
+    const tickerTrackerFunction = new NodejsFunction(this, `${STACK_NAME}-${tickerTracker}`, {
+      functionName: `${STACK_NAME}-${tickerTracker}`,
+      entry: path.join(__dirname, `../src/lambdas/${tickerTracker}.ts`),
       timeout: Duration.seconds(10),
       environment: {
-        TOPIC_ARN: topic.topicArn
-      }
-    });
-
-    const stocksTracker = 'stocks-tracker'
-    const stocksTrackerFunction = new NodejsFunction(this, `${STACK_NAME}-${stocksTracker}`, {
-      functionName: `${STACK_NAME}-${stocksTracker}`,
-      entry: path.join(__dirname, `../src/lambdas/${stocksTracker}.ts`),
-      timeout: Duration.seconds(10),
-      environment: {
-        MARKET_STACK_ACCESS_KEY: MARKET_STACK_ACCESS_KEY,
-        TOPIC_ARN: topic.topicArn
+        TOPIC_ARN: topic.topicArn,
+        MARKET_STACK_ACCESS_KEY: MARKET_STACK_ACCESS_KEY
       }
     });
 
@@ -51,14 +41,12 @@ export class TelegramBotStack extends Stack {
     });
 
     topic.addSubscription(new LambdaSubscription(messageSenderFunction))
-    topic.grantPublish(cryptopTrackerFunction)
-    topic.grantPublish(stocksTrackerFunction)
+    topic.grantPublish(tickerTrackerFunction)
 
     const rule = new Rule(this, 'Rule', {
       schedule: Schedule.expression('cron(0 22 ? * MON-FRI *)')
     });
 
-    rule.addTarget(new LambdaFunction(cryptopTrackerFunction))
-    rule.addTarget(new LambdaFunction(stocksTrackerFunction))
+    rule.addTarget(new LambdaFunction(tickerTrackerFunction))
   }
 }

@@ -19,15 +19,10 @@ describe('cdk tests', () => {
   })
 
   test('should create lambdas', () => {
-    expectCdk(stack).to(countResources('AWS::Lambda::Function', 3))
+    expectCdk(stack).to(countResources('AWS::Lambda::Function', 2))
 
     expectCdk(stack).to(haveResourceLike('AWS::Lambda::Function', {
-      FunctionName: 'telegram-bot-stocks-tracker',
-      Runtime: 'nodejs14.x'
-    }))
-
-    expectCdk(stack).to(haveResourceLike('AWS::Lambda::Function', {
-      FunctionName: 'telegram-bot-crypto-tracker',
+      FunctionName: 'telegram-bot-ticker-tracker',
       Runtime: 'nodejs14.x'
     }))
 
@@ -38,9 +33,9 @@ describe('cdk tests', () => {
   })
 
   test('should create permissions to invoke lambdas', () => {
-    expectCdk(stack).to(countResources('AWS::Lambda::Permission', 3))
+    expectCdk(stack).to(countResources('AWS::Lambda::Permission', 2))
 
-    expectCdk(stack).to(countResourcesLike('AWS::Lambda::Permission', 2, {
+    expectCdk(stack).to(countResourcesLike('AWS::Lambda::Permission', 1, {
       Action: 'lambda:InvokeFunction',
       Principal: 'events.amazonaws.com'
     }))
@@ -61,7 +56,7 @@ describe('cdk tests', () => {
   })
 
   test('should a role for each lambda', () => {
-    expectCdk(stack).to(countResources('AWS::IAM::Role', 3))
+    expectCdk(stack).to(countResources('AWS::IAM::Role', 2))
   })
 
   test('should subscribe a lambda to an sns topic', () => {
@@ -72,8 +67,8 @@ describe('cdk tests', () => {
     }))
   })
 
-  test('should create policies to publish to sns ...', () => {
-    expectCdk(stack).to(countResourcesLike('AWS::IAM::Policy', 2, {
+  test('should create policies to publish to sns', () => {
+    expectCdk(stack).to(countResourcesLike('AWS::IAM::Policy', 1, {
       PolicyDocument: {
         Statement: [{
           Action: 'sns:Publish',
