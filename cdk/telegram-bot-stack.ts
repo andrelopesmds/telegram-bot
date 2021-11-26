@@ -44,7 +44,7 @@ export class TelegramBotStack extends Stack {
     topic.grantPublish(tickerTrackerFunction)
 
     const rule = new Rule(this, 'Rule', {
-      schedule: Schedule.expression('cron(0 22 ? * MON-FRI *)')
+      schedule: Schedule.expression('cron(0 22 ? * MON,TUE,WED,THU *)')
     });
 
     rule.addTarget(new LambdaFunction(tickerTrackerFunction))

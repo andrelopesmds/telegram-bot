@@ -50,7 +50,7 @@ describe('cdk tests', () => {
     expectCdk(stack).to(countResources('AWS::Events::Rule', 1))
 
     expectCdk(stack).to(haveResourceLike('AWS::Events::Rule', {
-      ScheduleExpression: 'cron(0 22 ? * MON-FRI *)',
+      ScheduleExpression: 'cron(0 22 ? * MON,TUE,WED,THU *)',
       State: 'ENABLED'
     }))
   })
