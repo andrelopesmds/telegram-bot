@@ -21,10 +21,6 @@ export const cryptoTickers: Ticker[] = [
 ]
 export const stocksTickers: Ticker[] = [
   {
-    key: 'ABEV3.BVMF',
-    name: 'AMBEV'
-  },
-  {
     key: 'BIDI11.BVMF',
     name: 'Banco Inter'
   },
