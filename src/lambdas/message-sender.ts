@@ -1,5 +1,5 @@
 import { BOT_TOKEN, BOT_CHAT_ID } from '../constants'
-import { getRequest } from '../helper'
+import { getRequest } from '../api'
 
 exports.handler = async (event: any) => {
   console.log(`Event: ${JSON.stringify(event)}`)
