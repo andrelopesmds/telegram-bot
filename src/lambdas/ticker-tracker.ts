@@ -1,25 +1,36 @@
-import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
-import { getPrice } from '../helper'
-import { cryptoTickers, stocksTickers, TOPIC_ARN } from '../constants'
-import { TickerType, Ticker } from '../ticker.interface';
 
-const sns = new SNSClient({});
+import { formatPrice, formatPercentage } from '../helper'
+import { TickerType, Ticker } from '../ticker.interface';
+import { sendMessage } from '../sns'
+import { getTickers } from '../dynamodb';
+import { getPrice } from '../api'
 
 export const handler = async (event: any): Promise<void> => {
   console.log(`Event: ${JSON.stringify(event)}`)
 
-  let message = 'Cryptos: \n'
-  message = message + await getMessage(cryptoTickers, TickerType.Crypto)
+  const tickers = await getTickers()
+  console.log(tickers)
 
-  message = message + '\nStocks: \n'
-  message = message + await getMessage(stocksTickers, TickerType.Stocks)
+  let message = ''
+
+  const cryptoTickers = tickers?.filter(x => x.type === TickerType.Crypto)
+  const stocksTickers = tickers?.filter(x => x.type === TickerType.Stocks)
+
+  if(cryptoTickers.length) {
+    message += 'Cryptos:\n'
+    message += await getMessage(cryptoTickers, TickerType.Crypto)
+    message += '\n'
+  }
   
-  await sns.send(new PublishCommand({
-    Message: message,
-    TopicArn: TOPIC_ARN,
-  }))
+  if(stocksTickers.length) {
+    message += 'Stocks:\n'
+    message += await getMessage(stocksTickers, TickerType.Stocks)
+  }
 
-  console.log(`Published message: ${message}`);
+  if(message) {
+    await sendMessage(message)
+    console.log(`Published message: ${message}`)
+  }
 };
 
 const getMessage = async (tickers: Ticker[], tickerType: TickerType): Promise<string> => {
@@ -27,7 +38,14 @@ const getMessage = async (tickers: Ticker[], tickerType: TickerType): Promise<st
 
   for (const ticker of tickers) {
     const price = await getPrice(ticker, tickerType)
-    message = message + ticker.name + ': ' + price + '\n'
+    message += ticker.name + ': ' + formatPrice(price)
+
+    const { target } = ticker
+    if(target) {
+      message += ` (${ formatPercentage(price/target*100) }% of target)`
+    }
+
+    message += '\n'
   }
 
   return message

@@ -8,3 +8,6 @@ template.yaml
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+
+# Yarn
+yarn-error.log

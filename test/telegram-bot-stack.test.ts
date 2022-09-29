@@ -1,6 +1,6 @@
 import { TelegramBotStack } from "../cdk/telegram-bot-stack";
 import { App } from "monocdk";
-import { haveResourceLike, countResources, expect as expectCdk, countResourcesLike } from '@monocdk-experiment/assert'
+import { haveResourceLike, countResources, expect as expectCdk, countResourcesLike, arrayWith, objectLike } from '@monocdk-experiment/assert'
 
 describe('cdk tests', () => {
   let stack: TelegramBotStack;
@@ -50,12 +50,12 @@ describe('cdk tests', () => {
     expectCdk(stack).to(countResources('AWS::Events::Rule', 1))
 
     expectCdk(stack).to(haveResourceLike('AWS::Events::Rule', {
-      ScheduleExpression: 'cron(0 22 ? * MON,TUE,WED,THU *)',
+      ScheduleExpression: 'cron(0 22 ? * MON *)',
       State: 'ENABLED'
     }))
   })
 
-  test('should a role for each lambda', () => {
+  test('should create a role for each lambda', () => {
     expectCdk(stack).to(countResources('AWS::IAM::Role', 2))
   })
 
@@ -70,10 +70,30 @@ describe('cdk tests', () => {
   test('should create policies to publish to sns', () => {
     expectCdk(stack).to(countResourcesLike('AWS::IAM::Policy', 1, {
       PolicyDocument: {
-        Statement: [{
+        Statement: arrayWith(objectLike({
           Action: 'sns:Publish',
           Effect: 'Allow',
-        }],
+        })),
+        Version: '2012-10-17'
+      }
+    }))
+  })
+
+  test('should create policies to read from dynamodb', () => {
+    expectCdk(stack).to(countResourcesLike('AWS::IAM::Policy', 1, {
+      PolicyDocument: {
+        Statement: arrayWith(objectLike({
+          Action: [
+            'dynamodb:BatchGetItem',
+            'dynamodb:GetRecords',
+            'dynamodb:GetShardIterator',
+            'dynamodb:Query',
+            'dynamodb:GetItem',
+            'dynamodb:Scan',
+            'dynamodb:ConditionCheckItem'
+          ],
+          Effect: 'Allow',
+        })),
         Version: '2012-10-17'
       }
     }))
