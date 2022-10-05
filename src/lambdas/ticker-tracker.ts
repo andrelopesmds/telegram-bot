@@ -3,7 +3,7 @@ import { formatPrice, formatPercentage } from '../helper'
 import { TickerType, Ticker } from '../ticker.interface';
 import { sendMessage } from '../sns'
 import { getTickers } from '../dynamodb';
-import { getPrice } from '../api'
+import { getStockPrice, getCryptoPrice } from '../api'
 
 export const handler = async (event: any): Promise<void> => {
   console.log(`Event: ${JSON.stringify(event)}`)
@@ -16,16 +16,32 @@ export const handler = async (event: any): Promise<void> => {
   const cryptoTickers = tickers?.filter(x => x.type === TickerType.Crypto)
   const stocksTickers = tickers?.filter(x => x.type === TickerType.Stocks)
 
-  if(cryptoTickers.length) {
-    message += 'Cryptos:\n'
-    message += await getMessage(cryptoTickers, TickerType.Crypto)
-    message += '\n'
-  }
-  
   if(stocksTickers.length) {
     message += 'Stocks:\n'
-    message += await getMessage(stocksTickers, TickerType.Stocks)
+
+    for (const stocksTicker of stocksTickers) {
+      const price = await getStockPrice(stocksTicker.key)
+
+      if(price) {
+        message += getMessageLine(stocksTicker, price)
+      }
+    }
+
+    message += '\n'
   }
+
+  if(cryptoTickers.length) {
+    message += 'Cryptos:\n'
+    for (const cryptoTicker of cryptoTickers) {
+      const price = await getCryptoPrice(cryptoTicker.key)
+
+      if(price) {
+        message += getMessageLine(cryptoTicker, price)
+      }
+    }
+  }
+  
+
 
   if(message) {
     await sendMessage(message)
@@ -33,20 +49,15 @@ export const handler = async (event: any): Promise<void> => {
   }
 };
 
-const getMessage = async (tickers: Ticker[], tickerType: TickerType): Promise<string> => {
-  let message = ''
+const getMessageLine = (ticker: Ticker, price: number) => {
+  let line = ticker.name + ': ' + formatPrice(price)
 
-  for (const ticker of tickers) {
-    const price = await getPrice(ticker, tickerType)
-    message += ticker.name + ': ' + formatPrice(price)
-
-    const { target } = ticker
-    if(target) {
-      message += ` (${ formatPercentage(price/target*100) }% of target)`
-    }
-
-    message += '\n'
+  const { target } = ticker
+  if(target) {
+    line += ` (${ formatPercentage(price/target*100) }% of target)`
   }
 
-  return message
+  line += '\n'
+
+  return line
 }

@@ -1,7 +1,7 @@
 import { handler } from '../src/lambdas/ticker-tracker'
 import { mocked } from 'jest-mock'
 import { getTickers } from '../src/dynamodb'
-import { getPrice } from '../src/api'
+import { getStockPrice, getCryptoPrice } from '../src/api'
 import { sendMessage } from '../src/sns'
 import { Ticker, TickerType } from '../src/ticker.interface'
 
@@ -10,31 +10,55 @@ jest.mock('../src/dynamodb')
 const getTickersMock = mocked(getTickers)
 
 jest.mock('../src/api')
-const getPriceMock = mocked(getPrice)
+const getStockPriceMock = mocked(getStockPrice)
+const getCryptoPriceMock = mocked(getCryptoPrice)
 
 jest.mock('../src/sns')
 const sendMessageMock = mocked(sendMessage)
 
-const getMockedTicker = (n: number, type: TickerType): Ticker => {
-  return {
-    key: `key-${ n }`,
-    name: `name-${ n }`,
-    target: 100 + n,
-    type
+const stocksMocked: Ticker[] = [
+  {
+    key: 'key1',
+    name: 'stock1',
+    target: 100,
+    type: TickerType.Stocks
+  },
+  {
+    key: 'key2',
+    name: 'stock2',
+    target: 150,
+    type: TickerType.Stocks
   }
-}
+]
+const allTickersMocked: Ticker[] = [
+  ...stocksMocked,
+  {
+    key: 'key3',
+    name: 'crypto3',
+    target: 50,
+    type: TickerType.Crypto
+  }
+]
 
 describe('Ticker tracker tests', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
-    getTickersMock.mockResolvedValue([
-      getMockedTicker(1, TickerType.Stocks),
-      getMockedTicker(2, TickerType.Stocks),
-      getMockedTicker(3, TickerType.Crypto)
-    ])
+    getTickersMock.mockResolvedValue(allTickersMocked)
 
-    getPriceMock.mockResolvedValueOnce(10).mockResolvedValueOnce(15).mockResolvedValueOnce(20)
+    getCryptoPriceMock.mockImplementation(async (key: string): Promise<number | undefined> => {
+      if(key === 'key3') return 1
+
+      return undefined
+    })
+
+    getStockPriceMock.mockImplementation(async (key: string): Promise<number | undefined> => {
+      if(key === 'key1') return 90
+
+      if(key === 'key2') return 120
+
+      return undefined
+    })
 
     sendMessageMock.mockResolvedValue()
   })
@@ -48,12 +72,14 @@ describe('Ticker tracker tests', () => {
   test('should call getPrice to fetch tickers price from external APIs', async () => {
     await handler({});
   
-    expect(getPriceMock).toHaveBeenCalledTimes(3)
+    expect(getStockPriceMock).toHaveBeenCalledTimes(2)
+    expect(getCryptoPriceMock).toHaveBeenCalledTimes(1)
   })
 
   test('should call sendMessage to publish messages to topic', async () => {
-    const expectedResponse = 'Cryptos:\nname-3: R$\xa010,00 (9,7% of target)\n' + 
-        '\nStocks:\nname-1: R$\xa015,00 (15% of target)\nname-2: R$\xa020,00 (20% of target)\n'
+    const expectedResponse = 'Stocks:\nstock1: R$\xa090,00 (90% of target)\n' + 
+        'stock2: R$\xa0120,00 (80% of target)\n' +
+        '\nCryptos:\ncrypto3: R$\xa01,00 (2% of target)\n'
 
     await handler({})
   
@@ -65,7 +91,8 @@ describe('Ticker tracker tests', () => {
 
     await handler({});
   
-    expect(getPriceMock).not.toHaveBeenCalled()
+    expect(getStockPriceMock).not.toHaveBeenCalled()
+    expect(getCryptoPriceMock).not.toHaveBeenCalled()
   })
 
   test('should not try to call sendMessage if there is no data in DB', async () => {
@@ -77,11 +104,32 @@ describe('Ticker tracker tests', () => {
   })
 
   test('should publish only Stocks if there is no Crypto in DB', async () => {
-    getTickersMock.mockResolvedValue([getMockedTicker(1, TickerType.Stocks)])
-    const expectedResponse = 'Stocks:\nname-1: R$\xa010,00 (9,9% of target)\n'
+    getTickersMock.mockResolvedValue(stocksMocked)
+    const expectedResponse = 'Stocks:\nstock1: R$\xa090,00 (90% of target)\n' + 
+        'stock2: R$\xa0120,00 (80% of target)\n\n' 
 
     await handler({});
   
     expect(sendMessageMock).toHaveBeenCalledWith(expectedResponse)
+  })
+
+  test('should still publish a message when one of the requests fails', async () => {
+    const invalidTicker: Ticker = {
+      key: 'invalid-key',
+      name: 'name',
+      type: TickerType.Stocks
+    }
+    getTickersMock.mockResolvedValue([
+      ...allTickersMocked,
+      invalidTicker
+    ])
+
+    const expectedResponse = 'Stocks:\nstock1: R$\xa090,00 (90% of target)\n' + 
+      'stock2: R$\xa0120,00 (80% of target)\n' +
+      '\nCryptos:\ncrypto3: R$\xa01,00 (2% of target)\n'
+
+    await handler({})
+
+    expect(sendMessageMock).toBeCalledWith(expectedResponse)
   })
 })
