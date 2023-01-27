@@ -132,4 +132,24 @@ describe('Ticker tracker tests', () => {
 
     expect(sendMessageMock).toBeCalledWith(expectedResponse)
   })
+
+  test.each([
+    { target: 90, currentValue: 94, percentage: '104' },
+    { target: 45, currentValue: 32, percentage: '71,1' },
+    { target: 30, currentValue: 10, percentage: '33,3' },
+  ])('should show up to 3 significant digits for percentages: $currentValue is $percentage% of $target', async ({ target, currentValue, percentage }) => {
+    const mockedTickers = [{
+      ...stocksMocked[0],
+      target
+    }]
+
+    getTickersMock.mockResolvedValue(mockedTickers)
+    getStockPriceMock.mockResolvedValue(currentValue)
+
+    const expectedResponse = `Stocks:\nstock1: R$\xa0${ currentValue },00 (${ percentage }% of target)\n\n` 
+
+    await handler({})
+
+    expect(sendMessageMock).toBeCalledWith(expectedResponse)
+  })
 })
