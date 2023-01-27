@@ -1,4 +1,4 @@
-name: Deploy to prod on manual trigger
+name: Deploy to prod
 
 on:
   push:

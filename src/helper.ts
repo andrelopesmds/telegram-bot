@@ -3,5 +3,5 @@ export const formatPrice = (value: number): string => {
 }
 
 export const formatPercentage = (value: number): string => {
-  return new Intl.NumberFormat('pt-BR', { maximumSignificantDigits: 2 }).format(value)
+  return new Intl.NumberFormat('pt-BR', { maximumSignificantDigits: 3 }).format(value)
 }
