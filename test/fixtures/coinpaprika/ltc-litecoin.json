@@ -1,0 +1,32 @@
+{
+  "id": "ltc-litecoin",
+  "name": "Litecoin",
+  "symbol": "LTC",
+  "rank": 31,
+  "total_supply": 77844668,
+  "max_supply": 84000000,
+  "beta_value": 1.01933,
+  "first_data_at": "2011-10-13T00:00:00Z",
+  "last_updated": "2026-11-19T02:23:14Z",
+  "quotes": {
+    "BRL": {
+      "price": 259.1839194970114,
+      "volume_24h": 1064438701.2544568,
+      "volume_24h_change_24h": -7.19,
+      "market_cap": 19583544809.19985,
+      "market_cap_change_24h": -1.12,
+      "percent_change_15m": -0.06,
+      "percent_change_30m": -0.24,
+      "percent_change_1h": 0.28,
+      "percent_change_6h": 0.77,
+      "percent_change_12h": -0.13,
+      "percent_change_24h": -1.12,
+      "percent_change_7d": -8.01,
+      "percent_change_30d": -16.56,
+      "percent_change_1y": -47.81,
+      "ath_price": 2428.206113540818,
+      "ath_date": "2021-05-10T02:55:00Z",
+      "percent_from_price_ath": -89.32
+    }
+  }
+}
