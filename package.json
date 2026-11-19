@@ -1,6 +1,10 @@
 {
   "name": "telegram-bot",
   "version": "0.1.0",
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "yarn@1.22.22",
   "bin": {
     "telegram-bot": "bin/telegram-bot.js"
   },
@@ -16,17 +20,15 @@
     "@aws-cdk/assert": "1.119.0",
     "@aws-cdk/aws-lambda": "^1.120.0",
     "@aws-cdk/aws-lambda-nodejs": "^1.120.0",
-    "@aws-cdk/aws-sns": "^1.120.0",
-    "@aws-cdk/aws-sns-subscriptions": "^1.120.0",
     "@aws-cdk/core": "^1.123.0",
     "@aws-sdk/client-dynamodb": "^3.178.0",
-    "@aws-sdk/client-sns": "^3.34.0",
     "@monocdk-experiment/assert": "^1.124.0",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
     "@types/superagent": "^4.1.12",
     "aws-cdk": "1.123.0",
     "aws-sdk-client-mock": "^0.5.5",
+    "esbuild": "^0.28.2",
     "jest": "^29.1.1",
     "monocdk": "^1.122.0",
     "source-map-support": "^0.5.20",
